@@ -108,6 +108,8 @@ function Application(messages) {
       messages.displayWinMsg()
     } else if (self.result(userChoice, opponentChoice) === 'lose') {
       messages.displayLoseMsg()
+    } else if (self.result(userChoice, opponentChoice) === 'tie') {
+      messages.displayTieMsg()
     }
 
     // Determine if a win occured
