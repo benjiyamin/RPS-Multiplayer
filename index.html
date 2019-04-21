@@ -30,9 +30,9 @@
 
       <main role="main" class="col-md-9 col-lg-10 ml-sm-auto px-4">
         <div class="jumbotron mt-4">
-          <div class="row">
+          <div class="row text-center">
             <div class="col-sm-6 lead">
-              <div id="looking">Looking for an opponent to play against..</div>
+              <div id="message"></div>
               <div id="choice">
                 <p>Make your choice..</p>
                 <div class="btn-group" role="group" aria-label="Choice button">
@@ -41,19 +41,15 @@
                   <button type="button" class="btn btn-secondary choice-btn" data-choice="leaf">Leaf</button>
                 </div>
               </div>
-              <div id="waiting">Waiting for the other player to make choice..</div>
-              <div id="win">Nice! You won this round. <a href="#" class="start-btn">Play again.</a></div>
-              <div id="lose">Sorry, you lose this round. <a href="#" class="start-btn">Try again.</a></div>
-              <div id="tie">Looks like a tie. <a href="#" class="start-btn">Try again.</a></div>
             </div>
             <div class="col-sm-6">
               <div class="row">
-                <div class="col display-4 text-center">
+                <div class="col display-4">
                   ROUND <span id="roundText">1</span>
                 </div>
               </div>
               <div class="row lead">
-                <div class="col text-center">
+                <div class="col">
                   <span class="pr-3"><span id="winsText">0</span> wins</span>
                   <span class="pl-3"><span id="lossesText">0</span> losses</span>
                 </div>
@@ -63,7 +59,6 @@
           <hr class="my-4">
           <div class="row">
             <div class="col">
-              <!--<h1 class="text-center">myusername</h1>-->
               <div class="flip-container">
                 <div class="flipper">
                   <div class="front">
@@ -80,7 +75,6 @@
               </div>
             </div>
             <div class="col">
-              <!--<h1 class="text-center">opponentusername</h1>-->
               <div class="flip-container">
                 <div class="flipper">
                   <div class="front">

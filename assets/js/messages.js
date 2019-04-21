@@ -1,55 +1,27 @@
 function Messages() {
-  this.displayLookingMsg = function () {
-    $('#waiting').hide()
+
+  this.displayMsg = function (msg) {
     $('#choice').hide()
-    $('#win').hide()
-    $('#lose').hide()
-    $('#tie').hide()
-    $('#looking').show()
+    $('#message')
+      .text(msg)
+      .show()
+  }
+
+  this.displayRestartMsg = function (msg) {
+    $('#choice').hide()
+    let a = $('<a>')
+      .attr('href', '#')
+      .addClass('start-btn')
+      .text('Play again.')
+    $('#message')
+      .text(msg)
+      .append(a)
+      .show()
   }
 
   this.displayChoiceMsg = function () {
-    $('#waiting').hide()
-    $('#win').hide()
-    $('#lose').hide()
-    $('#tie').hide()
-    $('#looking').hide()
+    $('#message').hide()
     $('#choice').show()
   }
-
-  this.displayWaitingMsg = function () {
-    $('#looking').hide()
-    $('#choice').hide()
-    $('#win').hide()
-    $('#lose').hide()
-    $('#tie').hide()
-    $('#waiting').show()
-  }
-
-  this.displayWinMsg = function () {
-    $('#looking').hide()
-    $('#choice').hide()
-    $('#waiting').hide()
-    $('#lose').hide()
-    $('#win').show()
-    $('#tie').hide()
-  }
-
-  this.displayLoseMsg = function () {
-    $('#looking').hide()
-    $('#choice').hide()
-    $('#waiting').hide()
-    $('#win').hide()
-    $('#lose').show()
-    $('#tie').hide()
-  }
-
-  this.displayTieMsg = function () {
-    $('#looking').hide()
-    $('#choice').hide()
-    $('#waiting').hide()
-    $('#win').hide()
-    $('#lose').hide()
-    $('#tie').show()
-  }
+  
 }

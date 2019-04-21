@@ -99,17 +99,22 @@ function Application(messages) {
     }
     //if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
     if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
-      messages.displayLookingMsg()
+      //messages.displayLookingMsg()
+      messages.displayMsg('Looking for an opponent to play against..')
     } else if ((self.player === 1 && !choice1.exists()) || (self.player === 2 && !choice2.exists())) {
       messages.displayChoiceMsg()
     } else if ((self.player === 1 && !choice2.exists()) || (self.player === 2 && !choice1.exists())) {
-      messages.displayWaitingMsg()
+      //messages.displayWaitingMsg()
+      messages.displayMsg('Waiting for the other player to make choice..')
     } else if (self.result(userChoice, opponentChoice) === 'win') {
-      messages.displayWinMsg()
+      //messages.displayWinMsg()
+      messages.displayRestartMsg('Nice! You won this round. ')
     } else if (self.result(userChoice, opponentChoice) === 'lose') {
-      messages.displayLoseMsg()
+      //messages.displayLoseMsg()
+      messages.displayRestartMsg('Sorry, you lose this round. ')
     } else if (self.result(userChoice, opponentChoice) === 'tie') {
-      messages.displayTieMsg()
+      //messages.displayTieMsg()
+      messages.displayRestartMsg('Looks like a tie. ')
     }
 
     // Determine if a win occured
@@ -174,7 +179,7 @@ function Application(messages) {
     self.choiceToImg('#img1', choice)
   })
 
-  $('.start-btn').on('click', function () {
+  $(document.body).on('click', '.start-btn', function () {
     database.ref('game/p' + self.player).update({
       restart: true
     });
