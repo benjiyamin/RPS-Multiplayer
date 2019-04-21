@@ -147,6 +147,15 @@ function Application(messages) {
 
   })
 
+  this.init = function () {
+    firebase.auth().signInAnonymously().catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
+  }
+
   $('.choice-btn').on('click', function () {
     let choice = $(this).attr('data-choice')
     if (self.player === 1) {
