@@ -100,9 +100,9 @@ function Application(messages) {
     //if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
     if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
       messages.displayLookingMsg()
-    } else if (!choice1.exists()) {
+    } else if ((self.player === 1 && !choice1.exists()) || (self.player === 2 && !choice2.exists())) {
       messages.displayChoiceMsg()
-    } else if (!choice2.exists()) {
+    } else if ((self.player === 1 && !choice2.exists()) || (self.player === 2 && !choice1.exists())) {
       messages.displayWaitingMsg()
     } else if (self.result(userChoice, opponentChoice) === 'win') {
       messages.displayWinMsg()
