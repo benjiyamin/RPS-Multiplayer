@@ -20,17 +20,6 @@
     /* Scrollable contents if viewport is shorter than content. */
 }
 
-/*
-  @supports ((position: -webkit-sticky) or (position: sticky)) {
-    .sidebar-sticky {
-      position: -webkit-sticky;
-      position: sticky;
-    }
-  }
-  */
-
-
-
 /* entire container, keeps perspective */
 .flip-container {
     perspective: 1000px;
