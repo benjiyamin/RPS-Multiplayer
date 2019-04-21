@@ -59,7 +59,7 @@ function Application(messages) {
     // Check if player 1 exists
     let slot1Empty = !snapshot.child("p1").exists()
     let slot2Empty = !snapshot.child("p2").exists()
-    if (!self.player && slot1Empty) {
+    if (slot1Empty) {
       self.player = 1
       database.ref('game/p1').set({
         user: user.uid
@@ -101,14 +101,11 @@ function Application(messages) {
     let restart1 = snapshot.child("p1/restart")
     let restart2 = snapshot.child("p2/restart")
 
-    //if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
     if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
-      //messages.displayLookingMsg()
       messages.displayMsg('Looking for an opponent to play against..')
     } else if ((self.player === 1 && !choice1.exists()) || (self.player === 2 && !choice2.exists())) {
       messages.displayChoiceMsg()
     } else if ((self.player === 1 && !choice2.exists()) || (self.player === 2 && !choice1.exists())) {
-      //messages.displayWaitingMsg()
       messages.displayMsg('Waiting for the other player to make choice..')
     } else if (
       restart1.exists() !== restart2.exists() &&
@@ -116,13 +113,10 @@ function Application(messages) {
     ) {
       messages.displayMsg('Waiting for the other player to restart..')
     } else if (self.result(userChoice, opponentChoice) === 'win') {
-      //messages.displayWinMsg()
       messages.displayRestartMsg('Nice! You won this round. ')
     } else if (self.result(userChoice, opponentChoice) === 'lose') {
-      //messages.displayLoseMsg()
       messages.displayRestartMsg('Sorry, you lose this round. ')
     } else if (self.result(userChoice, opponentChoice) === 'tie') {
-      //messages.displayTieMsg()
       messages.displayRestartMsg('Looks like a tie. ')
     }
 
