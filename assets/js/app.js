@@ -97,6 +97,10 @@ function Application(messages) {
       userChoice = gameData.p2.choice
       opponentChoice = gameData.p1.choice
     }
+
+    let restart1 = snapshot.child("p1/restart")
+    let restart2 = snapshot.child("p2/restart")
+
     //if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
     if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
       //messages.displayLookingMsg()
@@ -106,6 +110,11 @@ function Application(messages) {
     } else if ((self.player === 1 && !choice2.exists()) || (self.player === 2 && !choice1.exists())) {
       //messages.displayWaitingMsg()
       messages.displayMsg('Waiting for the other player to make choice..')
+    } else if (
+      restart1.exists() !== restart2.exists() &&
+      ((self.player === 1 && gameData.p1.restart === true) || (self.player === 2 && gameData.p2.restart === true))
+    ) {
+      messages.displayMsg('Waiting for the other player to restart..')
     } else if (self.result(userChoice, opponentChoice) === 'win') {
       //messages.displayWinMsg()
       messages.displayRestartMsg('Nice! You won this round. ')
@@ -143,9 +152,7 @@ function Application(messages) {
     */
 
     // restart the game
-    let restart1 = snapshot.child("p1/restart")
-    let restart2 = snapshot.child("p2/restart")
-    if (restart1.exists() && restart2.exists() && gameData.p1.restart === true && gameData.p2.restart) {
+    if (restart1.exists() && restart2.exists() && gameData.p1.restart === true && gameData.p2.restart === true) {
       database.ref('game/p1/choice').remove()
       database.ref('game/p2/choice').remove()
       database.ref('game/p1/restart').remove()
