@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark bg-dark flex-md-nowrap">
+    <a class="navbar-brand" href="#">Ro-Sham-Bo Multiplayer</a>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+
+        </div>
+      </div>
+
+      <main role="main" class="col-md-9 col-lg-10 ml-sm-auto px-4">
+        <div class="jumbotron mt-4">
+          <div class="row">
+            <div class="col-sm-6 lead">
+              <div id="looking">Looking for an opponent to play against..</div>
+              <div id="choice">
+                <p>Make your choice..</p>
+                <div class="btn-group" role="group" aria-label="Choice button">
+                  <button type="button" class="btn btn-secondary choice-btn" data-choice="water">Water</button>
+                  <button type="button" class="btn btn-secondary choice-btn" data-choice="fire">Fire</button>
+                  <button type="button" class="btn btn-secondary choice-btn" data-choice="leaf">Leaf</button>
+                </div>
+              </div>
+              <div id="waiting">Waiting for the other player to make choice..</div>
+              <div id="win">Nice! You won this round. <a href="#" class="start-btn">Play again.</a></div>
+              <div id="lose">Sorry, you lose this round. <a href="#" class="start-btn">Try again.</a></div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col display-4 text-center">
+                  ROUND <span id="roundText">1</span>
+                </div>
+              </div>
+              <div class="row lead">
+                <div class="col text-center">
+                  <span class="pr-3"><span id="winsText">0</span> wins</span>
+                  <span class="pl-3"><span id="lossesText">0</span> losses</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="my-4">
+          <div class="row">
+            <div class="col">
+              <!--<h1 class="text-center">myusername</h1>-->
+              <div class="flip-container">
+                <div class="flipper">
+                  <div class="front">
+                    <div class="card">
+                      <img src="assets/images/question-mark.png" class="card-img-top" alt="...">
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="card">
+                      <img src="assets/images/water.png" id="img1" class="card-img-top" alt="...">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <!--<h1 class="text-center">opponentusername</h1>-->
+              <div class="flip-container">
+                <div class="flipper">
+                  <div class="front">
+                    <div class="card">
+                      <img src="assets/images/question-mark.png" class="card-img-top" alt="...">
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="card">
+                      <img src="assets/images/water.png" id="img2" class="card-img-top" alt="...">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+
+  <script src="assets/js/messages.js"></script>
+  <script src="assets/js/app.js"></script>
+
+  <script>
+    let messages = new Messages()
+    let app = new Application(messages = messages)
+    //app.init()
+  </script>
+</body>
+
+</html>
