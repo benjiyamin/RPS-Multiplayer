@@ -27,31 +27,13 @@
 
 /* flip the pane when hovered */
 .flip-container.flipped .flipper {
-    -webkit-transform: rotateY(180deg);
-    /* WebKit */
-    -moz-transform: rotateY(180deg);
-    /* Mozilla */
-    -o-transform: rotateY(180deg);
-    /* Opera */
-    -ms-transform: rotateY(180deg);
-    /* Internet Explorer */
     transform: rotateY(180deg);
-    /* CSS3 */
 }
 
 /* flip speed goes here */
 .flipper {
     transition: 0.6s;
-    -webkit-transform-style: preserve-3d;
-    /* WebKit */
-    -moz-transform-style: preserve-3d;
-    /* Mozilla */
-    -o-transform-style: preserve-3d;
-    /* Opera */
-    -ms-transform-style: preserve-3d;
-    /* Internet Explorer */
     transform-style: preserve-3d;
-    /* CSS3 */
     position: relative;
 }
 
@@ -66,31 +48,15 @@
 
 /* front pane, placed above back */
 .front {
+    backface-visibility: hidden;
     z-index: 2;
-    -webkit-transform: rotateY(0deg);
-    /* WebKit */
-    -moz-transform: rotateY(0deg);
-    /* Mozilla */
-    -o-transform: rotateY(0deg);
-    /* Opera */
-    -ms-transform: rotateY(0deg);
-    /* Internet Explorer */
+    /* for firefox 31 */
     transform: rotateY(0deg);
-    /* CSS3 */
 }
 
 /* back, initially hidden pane */
 .back {
-    -webkit-transform: rotateY(180deg);
-    /* WebKit */
-    -moz-transform: rotateY(180deg);
-    /* Mozilla */
-    -o-transform: rotateY(180deg);
-    /* Opera */
-    -ms-transform: rotateY(180deg);
-    /* Internet Explorer */
     transform: rotateY(180deg);
-    /* CSS3 */
 }
 
 #choice {
