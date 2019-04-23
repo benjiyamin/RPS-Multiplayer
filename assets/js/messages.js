@@ -20,6 +20,7 @@ function Messages() {
   }
 
   this.displayChoiceMsg = function () {
+    //console.log('displayChoiceMessage')
     $('#message').hide()
     $('#choice').show()
   }

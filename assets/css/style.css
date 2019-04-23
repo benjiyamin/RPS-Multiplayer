@@ -58,6 +58,6 @@
     transform: rotateY(180deg);
 }
 
-#choice, #waiting, #win, #lose, #tie {
+#choice {
     display: none
 }

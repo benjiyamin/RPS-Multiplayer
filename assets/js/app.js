@@ -128,10 +128,11 @@ function Application(messages) {
         database.ref('game/p1/restart').remove()
         database.ref('game/p2/restart').remove()
         self.reset()
-        messages.displayChoiceMsg()
       } else if (gameSnap.child("p" + self.player + "/restart").exists()) {
         // User restart is made is added
         messages.displayMsg('Waiting for the other player to restart..')
+      } else if (!restart1.exists() && !restart2.exists()) {
+        messages.displayChoiceMsg()
       }
     })
   }
@@ -147,7 +148,7 @@ function Application(messages) {
   })
 
   // Execute on init
-  database.ref().once('value').then(function (snapshot) {
+  gameRef.once('value').then(function (snapshot) {
     var user = firebase.auth().currentUser
 
     // Check if player 1 exists
@@ -158,12 +159,13 @@ function Application(messages) {
       database.ref('game/p1').set({
         user: user.uid
       });
-    } else if (!self.player && slot2Empty) {
+    } else if (slot2Empty) {
       self.player = 2
       database.ref('game/p2').set({
         user: user.uid
       });
     }
+    //console.log('Player: ' + self.player)
     // Clean up when disconnected
     database.ref('game/p' + self.player).onDisconnect().remove();
 
@@ -180,17 +182,9 @@ function Application(messages) {
 
   $('.choice-btn').on('click', function () {
     let choice = $(this).attr('data-choice')
-    if (self.player === 1) {
-      // player 1
-      database.ref('game/p1').update({
-        choice: choice
-      });
-    } else if (self.player === 2) {
-      // player 2
-      database.ref('game/p2').update({
-        choice: choice
-      });
-    }
+    database.ref('game/p' + self.player).update({
+      choice: choice
+    });
     self.choiceToImg('#img1', choice)
   })
 
