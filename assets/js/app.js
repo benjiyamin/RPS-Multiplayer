@@ -93,11 +93,33 @@ function Application(messages) {
         }
         if (self.result(userChoice, opponentChoice) === 'win') {
           messages.displayRestartMsg('Nice! You won this round. ')
+          let wins = 1
+          if (gameSnap.child("p" + self.player + "/wins").exists()) {
+            if (self.player == 1) {
+              wins += gameData.p1.wins
+            } else if (self.player == 2) {
+              wins += gameData.p2.wins
+            }
+          }
+          database.ref('game/p' + self.player).update({
+            wins: wins
+          });
+          $('#winsText').text(wins)
         } else if (self.result(userChoice, opponentChoice) === 'lose') {
           messages.displayRestartMsg('Sorry, you lose this round. ')
+          let losses = 1
+          if (gameSnap.child("p" + self.opponent() + "/wins").exists()) {
+            if (self.opponent() == 1) {
+              losses += gameData.p1.wins
+            } else if (self.opponent() == 2) {
+              losses += gameData.p2.wins
+            }
+          }
+          $('#lossesText').text(losses)
         } else if (self.result(userChoice, opponentChoice) === 'tie') {
           messages.displayRestartMsg('Looks like a tie. ')
         }
+
         self.reveal(opponentChoice)
       } else if (gameSnap.child("p" + self.player + "/choice").exists()) {
         // User choice is made is added
@@ -119,6 +141,7 @@ function Application(messages) {
   // Restart logic
   this.updateAfterRestart = function (gameRef) {
     gameRef.once('value').then(function (gameSnap) {
+      let gameData = gameSnap.val()
       let restart1 = gameSnap.child("p1/restart")
       let restart2 = gameSnap.child("p2/restart")
       if (restart1.exists() && restart2.exists()) {
@@ -133,6 +156,14 @@ function Application(messages) {
         messages.displayMsg('Waiting for the other player to restart..')
       } else if (!restart1.exists() && !restart2.exists()) {
         messages.displayChoiceMsg()
+        let rounds = 1
+        if (gameSnap.child("p1/wins").exists()) {
+          rounds += gameData.p1.wins
+        }
+        if (gameSnap.child("p2/wins").exists()) {
+          rounds += gameData.p2.wins
+        }
+        $('#roundText').text(rounds)
       }
     })
   }
