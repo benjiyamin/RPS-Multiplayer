@@ -13,6 +13,14 @@ function Application(messages) {
   firebase.initializeApp(config);
   let database = firebase.database()
 
+  this.opponent = function () {
+    if (self.player === 1) {
+      return 2
+    } else if (self.player === 2) {
+      return 1
+    }
+  }
+
   this.choiceToImg = function (imgSelector, choice) {
     let $img = $(imgSelector)
     $img.closest('.flip-container').addClass('flipped')
@@ -51,9 +59,95 @@ function Application(messages) {
     }
   }
 
-  // Whenever a change to the database occues
-  database.ref("game").on("value", function (snapshot) {
+  let gameRef = database.ref('game')
 
+  // Whenever a player is added
+  gameRef.on('child_added', function (snapshot) {
+    gameRef.once('value').then(function (gameSnap) {
+      //if (gameSnap.child("p1").exists() && gameSnap.child("p2").exists()) {
+      if (gameSnap.child("p" + self.opponent()).exists()) {
+        // Opponent is added
+        messages.displayChoiceMsg()
+      } else {
+        // User is added
+        messages.displayMsg('Looking for an opponent to play against..')
+      }
+    })
+  })
+
+  // Choice logic
+  this.updateAfterChoice = function (gameRef) {
+    gameRef.once('value').then(function (gameSnap) {
+      let gameData = gameSnap.val()
+      let choice1 = gameSnap.child("p1/choice")
+      let choice2 = gameSnap.child("p2/choice")
+      if (choice1.exists() && choice2.exists()) {
+        // choices made
+        let userChoice, opponentChoice
+        if (self.player === 1 && choice1.exists() && choice2.exists()) {
+          userChoice = gameData.p1.choice
+          opponentChoice = gameData.p2.choice
+        } else if (self.player === 2 && choice1.exists() && choice2.exists()) {
+          userChoice = gameData.p2.choice
+          opponentChoice = gameData.p1.choice
+        }
+        if (self.result(userChoice, opponentChoice) === 'win') {
+          messages.displayRestartMsg('Nice! You won this round. ')
+        } else if (self.result(userChoice, opponentChoice) === 'lose') {
+          messages.displayRestartMsg('Sorry, you lose this round. ')
+        } else if (self.result(userChoice, opponentChoice) === 'tie') {
+          messages.displayRestartMsg('Looks like a tie. ')
+        }
+        self.reveal(opponentChoice)
+      } else if (gameSnap.child("p" + self.player + "/choice").exists()) {
+        // User choice is made is added
+        messages.displayMsg('Waiting for the other player to make choice..')
+      }
+    })
+  }
+
+  // Player 1 choice is made
+  database.ref('game/p1/choice').on('value', function (snapshot) {
+    self.updateAfterChoice(gameRef)
+  })
+
+  // Player 2 choice is made
+  database.ref('game/p2/choice').on('value', function (snapshot) {
+    self.updateAfterChoice(gameRef)
+  })
+
+  // Restart logic
+  this.updateAfterRestart = function (gameRef) {
+    gameRef.once('value').then(function (gameSnap) {
+      let restart1 = gameSnap.child("p1/restart")
+      let restart2 = gameSnap.child("p2/restart")
+      if (restart1.exists() && restart2.exists()) {
+        // restarts made
+        database.ref('game/p1/choice').remove()
+        database.ref('game/p2/choice').remove()
+        database.ref('game/p1/restart').remove()
+        database.ref('game/p2/restart').remove()
+        self.reset()
+        messages.displayChoiceMsg()
+      } else if (gameSnap.child("p" + self.player + "/restart").exists()) {
+        // User restart is made is added
+        messages.displayMsg('Waiting for the other player to restart..')
+      }
+    })
+  }
+
+  // Player 1 restart is made
+  database.ref('game/p1/restart').on('value', function (snapshot) {
+    self.updateAfterRestart(gameRef)
+  })
+
+  // Player 2 restart is made
+  database.ref('game/p2/restart').on('value', function (snapshot) {
+    self.updateAfterRestart(gameRef)
+  })
+
+  // Execute on init
+  database.ref().once('value').then(function (snapshot) {
     var user = firebase.auth().currentUser
 
     // Check if player 1 exists
@@ -73,89 +167,9 @@ function Application(messages) {
     // Clean up when disconnected
     database.ref('game/p' + self.player).onDisconnect().remove();
 
-    let choice1 = snapshot.child("p1/choice")
-    let choice2 = snapshot.child("p2/choice")
-
-    let gameData = snapshot.val()
-    if (choice1.exists() && choice2.exists()) {
-      let choice
-      if (self.player === 1) {
-        choice = gameData.p2.choice
-      } else if (self.player === 2) {
-        choice = gameData.p1.choice
-      }
-      self.reveal(choice)
-    } else {
-      self.reset()
-    }
-
-    let userChoice, opponentChoice
-    if (self.player === 1 && choice1.exists() && choice2.exists()) {
-      userChoice = gameData.p1.choice
-      opponentChoice = gameData.p2.choice
-    } else if (self.player === 2 && choice1.exists() && choice2.exists()) {
-      userChoice = gameData.p2.choice
-      opponentChoice = gameData.p1.choice
-    }
-
-    let restart1 = snapshot.child("p1/restart")
-    let restart2 = snapshot.child("p2/restart")
-
-    if ((self.player === 1 && slot2Empty) || (self.player === 2 && slot1Empty)) {
-      messages.displayMsg('Looking for an opponent to play against..')
-    } else if ((self.player === 1 && !choice1.exists()) || (self.player === 2 && !choice2.exists())) {
-      messages.displayChoiceMsg()
-    } else if ((self.player === 1 && !choice2.exists()) || (self.player === 2 && !choice1.exists())) {
-      messages.displayMsg('Waiting for the other player to make choice..')
-    } else if (
-      restart1.exists() !== restart2.exists() &&
-      ((self.player === 1 && gameData.p1.restart === true) || (self.player === 2 && gameData.p2.restart === true))
-    ) {
-      messages.displayMsg('Waiting for the other player to restart..')
-    } else if (self.result(userChoice, opponentChoice) === 'win') {
-      messages.displayRestartMsg('Nice! You won this round. ')
-    } else if (self.result(userChoice, opponentChoice) === 'lose') {
-      messages.displayRestartMsg('Sorry, you lose this round. ')
-    } else if (self.result(userChoice, opponentChoice) === 'tie') {
-      messages.displayRestartMsg('Looks like a tie. ')
-    }
-
-    // Determine if a win occured
-    /*
-    if (self.result(userChoice, opponentChoice) === 'win') {
-      if (self.player === 1) {
-        // player 1
-        wins = 1
-        if (snapshot.child("p1/wins").exists()) {
-          wins = gameData.p1.wins
-        }
-        database.ref('game/p1').update({
-          wins: wins
-        });
-      } else if (self.player === 2) {
-        // player 2
-        wins = 1
-        if (snapshot.child("p2/wins").exists()) {
-          wins = gameData.p2.wins
-        }
-        database.ref('game/p2').update({
-          wins: wins
-        });
-      }
-    }
-    */
-
-    // restart the game
-    if (restart1.exists() && restart2.exists() && gameData.p1.restart === true && gameData.p2.restart === true) {
-      database.ref('game/p1/choice').remove()
-      database.ref('game/p2/choice').remove()
-      database.ref('game/p1/restart').remove()
-      database.ref('game/p2/restart').remove()
-    }
-
   })
 
-  this.init = function () {
+  this.authenticate = function () {
     firebase.auth().signInAnonymously().catch(function (error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -180,7 +194,7 @@ function Application(messages) {
     self.choiceToImg('#img1', choice)
   })
 
-  $(document.body).on('click', '.start-btn', function () {
+  $(document.body).on('click', '.restart-btn', function () {
     database.ref('game/p' + self.player).update({
       restart: true
     });

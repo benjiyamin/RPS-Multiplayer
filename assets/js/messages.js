@@ -11,7 +11,7 @@ function Messages() {
     $('#choice').hide()
     let a = $('<a>')
       .attr('href', '#')
-      .addClass('start-btn')
+      .addClass('restart-btn')
       .text('Play again.')
     $('#message')
       .text(msg)
