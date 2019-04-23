@@ -23,16 +23,24 @@ function Application(messages) {
 
   this.choiceToImg = function (imgSelector, choice) {
     let $img = $(imgSelector)
-    $img.closest('.flip-container').addClass('flipped')
-    let src = 'assets/images/question-mark.png'
-    if (choice === 'fire') {
-      src = 'assets/images/fire.png'
-    } else if (choice === 'water') {
-      src = 'assets/images/water.png'
-    } else if (choice === 'leaf') {
-      src = 'assets/images/leaf.png'
+    let src
+    if (choice) {
+      $img.closest('.flip-container').addClass('flipped')
+      if (choice === 'fire') {
+        src = 'assets/images/fire.png'
+      } else if (choice === 'water') {
+        src = 'assets/images/water.png'
+      } else if (choice === 'leaf') {
+        src = 'assets/images/leaf.png'
+      }
+      $img.attr('src', src)
+    } else {
+      $img.closest('.flip-container').removeClass('flipped')
+      let src = 'assets/images/question-mark.png'
+      setTimeout(function () {
+        $img.attr('src', src)
+      }, 600);
     }
-    $img.attr('src', src)
   }
 
   this.reveal = function (choice2) {
@@ -42,7 +50,7 @@ function Application(messages) {
   this.reset = function () {
     this.choiceToImg('#img1')
     this.choiceToImg('#img2')
-    $('.flip-container').removeClass('flipped')
+    //$('.flip-container').removeClass('flipped')
   }
 
   this.result = function (gameData) {
@@ -192,6 +200,8 @@ function Application(messages) {
       database.ref('game/p2').set({
         user: user.uid
       });
+    } else {
+      messages.displayRestartMsg('Sorry. Only two players can play at a time (for now)..')
     }
     // Clean up when disconnected
     database.ref('game/p' + self.player).onDisconnect().remove();

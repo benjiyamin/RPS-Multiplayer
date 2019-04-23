@@ -14,7 +14,7 @@ function Messages() {
       .addClass('restart-btn')
       .text('Play again.')
     $('#message')
-      .text(msg)
+      .text(msg + ' ')
       .append(a)
       .show()
   }
