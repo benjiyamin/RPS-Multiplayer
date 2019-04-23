@@ -45,17 +45,31 @@ function Application(messages) {
     $('.flip-container').removeClass('flipped')
   }
 
-  this.result = function (userChoice, opponentChoice) {
+  this.result = function (gameData) {
+    let userChoice = this.userChoice(gameData)
+    let opponentChoice = this.opponentChoice(gameData)
     if (userChoice === opponentChoice) {
       return 'tie'
-    } else if (userChoice === 'leaf' && opponentChoice == 'water') {
-      return 'win'
-    } else if (userChoice === 'fire' && opponentChoice == 'leaf') {
-      return 'win'
-    } else if (userChoice === 'water' && opponentChoice == 'fire') {
+    } else if ((userChoice === 'leaf' && opponentChoice == 'water') || (userChoice === 'fire' && opponentChoice == 'leaf') || (userChoice === 'water' && opponentChoice == 'fire')) {
       return 'win'
     } else {
       return 'lose'
+    }
+  }
+
+  this.userChoice = function (gameData) {
+    if (self.player === 1) {
+      return gameData.p1.choice
+    } else if (self.player === 2) {
+      return gameData.p2.choice
+    }
+  }
+
+  this.opponentChoice = function (gameData) {
+    if (self.player === 2) {
+      return gameData.p1.choice
+    } else if (self.player === 1) {
+      return gameData.p2.choice
     }
   }
 
@@ -64,7 +78,6 @@ function Application(messages) {
   // Whenever a player is added
   gameRef.on('child_added', function (snapshot) {
     gameRef.once('value').then(function (gameSnap) {
-      //if (gameSnap.child("p1").exists() && gameSnap.child("p2").exists()) {
       if (gameSnap.child("p" + self.opponent()).exists()) {
         // Opponent is added
         messages.displayChoiceMsg()
@@ -83,44 +96,28 @@ function Application(messages) {
       let choice2 = gameSnap.child("p2/choice")
       if (choice1.exists() && choice2.exists()) {
         // choices made
-        let userChoice, opponentChoice
-        if (self.player === 1 && choice1.exists() && choice2.exists()) {
-          userChoice = gameData.p1.choice
-          opponentChoice = gameData.p2.choice
-        } else if (self.player === 2 && choice1.exists() && choice2.exists()) {
-          userChoice = gameData.p2.choice
-          opponentChoice = gameData.p1.choice
-        }
-        if (self.result(userChoice, opponentChoice) === 'win') {
+        if (self.result(gameData) === 'win') {
           messages.displayRestartMsg('Nice! You won this round. ')
           let wins = 1
           if (gameSnap.child("p" + self.player + "/wins").exists()) {
-            if (self.player == 1) {
-              wins += gameData.p1.wins
-            } else if (self.player == 2) {
-              wins += gameData.p2.wins
-            }
+            wins += gameData['p' + self.player].wins
           }
           database.ref('game/p' + self.player).update({
             wins: wins
           });
           $('#winsText').text(wins)
-        } else if (self.result(userChoice, opponentChoice) === 'lose') {
+        } else if (self.result(gameData) === 'lose') {
           messages.displayRestartMsg('Sorry, you lose this round. ')
           let losses = 1
           if (gameSnap.child("p" + self.opponent() + "/wins").exists()) {
-            if (self.opponent() == 1) {
-              losses += gameData.p1.wins
-            } else if (self.opponent() == 2) {
-              losses += gameData.p2.wins
-            }
+            losses += gameData['p' + self.opponent()].wins
           }
           $('#lossesText').text(losses)
-        } else if (self.result(userChoice, opponentChoice) === 'tie') {
+        } else if (self.result(gameData) === 'tie') {
           messages.displayRestartMsg('Looks like a tie. ')
         }
 
-        self.reveal(opponentChoice)
+        self.reveal(self.opponentChoice(gameData))
       } else if (gameSnap.child("p" + self.player + "/choice").exists()) {
         // User choice is made is added
         messages.displayMsg('Waiting for the other player to make choice..')
@@ -196,7 +193,6 @@ function Application(messages) {
         user: user.uid
       });
     }
-    //console.log('Player: ' + self.player)
     // Clean up when disconnected
     database.ref('game/p' + self.player).onDisconnect().remove();
 
