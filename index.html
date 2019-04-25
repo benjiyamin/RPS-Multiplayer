@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
+  <!-- Link to Moment.js should go here -->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -23,15 +26,12 @@
     <a class="navbar-brand" href="#">Ro-Sham-Bo Multiplayer</a>
   </nav>
 
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
-      <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar">
-        <div class="sidebar-sticky">
 
-        </div>
-      </div>
-
-      <main role="main" class="col-md-9 col-lg-10 ml-sm-auto px-4">
+      <!--<main role="main" class="col-md-8 col-lg-9 ml-sm-auto px-4">-->
+      <!--<main role="main" class="col-lg-10 ml-sm-auto px-4">-->
+      <main role="main" class="col ml-sm-auto px-4">
         <div class="jumbotron mt-4">
           <div class="row text-center">
             <div class="col-sm-6 lead">
@@ -96,6 +96,27 @@
           </div>
         </div>
       </main>
+
+      <div class="card d-none d-md-block chat-card">
+        <h5 class="card-header">Chat <span class="float-right" id="minChat"><i class="fas fa-minus-square"></i></span>
+        </h5>
+        <div class="card-body" id="chatBody">
+          <div class="chat-wrapper">
+            <div class="chat-input">
+              <div class="input-group mb-1">
+                <input type="text" class="form-control" placeholder="Your message" aria-label="Your message"
+                  aria-describedby="msgBtn" id="msgInput">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" id="msgBtn">Send</button>
+                </div>
+              </div>
+            </div>
+            <div id="chatMessages">
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 

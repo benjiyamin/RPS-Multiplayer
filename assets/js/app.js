@@ -217,6 +217,68 @@ function Application(messages) {
     });
   }
 
+  this.sendMessage = function () {
+    let $msgInput = $('#msgInput')
+    let text = $msgInput.val().trim()
+    if (text) {
+      // Store to firebase
+      var user = firebase.auth().currentUser
+      database.ref('messages').push({
+        text: text,
+        user: user.uid,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      })
+    }
+    $msgInput.val('')
+  }
+
+  // This function allows you to update your page in real-time when the firebase database changes.
+  var child_added_first = true;
+  database.ref('messages').orderByChild('timestamp').limitToLast(1).on('child_added', function (snapshot) {
+    if (!child_added_first) {
+      var user = firebase.auth().currentUser
+      let msgData = snapshot.val()
+      var timeStamp = moment(msgData.timestamp).format('h:mm:ss A')
+      let p = $('<p>').text(msgData.text)
+      let chatTime = $('<span>')
+        .addClass('chat-time')
+        .text(timeStamp)
+      let msgType = $('<div>')
+        .append(p, chatTime)
+      if (msgData.user == user.uid) {
+        msgType.addClass('outgoing px-0 offset-sm-5 col-sm-7')
+      } else {
+        msgType.addClass('incoming px-0 col-sm-7')
+      }
+      let chatMsg = $('<div>')
+        .addClass('chat-message row')
+        .append(msgType)
+      let chatMessages = $('#chatMessages')
+        .append(chatMsg)
+      chatMessages.scrollTop(chatMessages[0].scrollHeight);
+    }
+    child_added_first = false;
+  })
+
+  $('#minChat').on('click', function () {
+    let $chatBody = $('#chatBody')
+    $chatBody.toggle()
+    if ($chatBody.is(':visible')) {
+      $('#msgInput').focus()
+    }
+  })
+
+  $('#msgInput').on('keyup', function (e) {
+    // If enter clicked
+    if (e.keyCode == 13) {
+      self.sendMessage()
+    }
+  });
+
+  $('#msgBtn').on('click', function () {
+    self.sendMessage()
+  })
+
   $('.choice-btn').on('click', function () {
     let choice = $(this).attr('data-choice')
     database.ref('game/p' + self.player).update({
