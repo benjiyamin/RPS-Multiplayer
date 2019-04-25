@@ -47,7 +47,7 @@
 }
 
 .chat-card {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 20px;
     width: 300px
