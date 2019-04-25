@@ -36,7 +36,7 @@ function Application(messages) {
       $img.attr('src', src)
     } else {
       $img.closest('.flip-container').removeClass('flipped')
-      let src = 'assets/images/question-mark.png'
+      let src = 'assets/images/playing-card-back.png'
       setTimeout(function () {
         $img.attr('src', src)
       }, 600);
