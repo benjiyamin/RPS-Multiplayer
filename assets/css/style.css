@@ -1,4 +1,8 @@
 
+.bg-main {
+    background: #46754A
+}
+
 /* entire container, keeps perspective */
 .flip-container {
     perspective: 1000px;

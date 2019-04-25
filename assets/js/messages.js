@@ -1,17 +1,29 @@
 function Messages() {
 
-  this.displayMsg = function (msg) {
+  this.displayMsg = function (msg, looking = false) {
     $('#choice').hide()
+    let p = $('<p>').text(msg)
     $('#message')
-      .text(msg)
+      .empty()
+      .append(p)
       .show()
+    if (looking) {
+      let sr = $('<span>')
+        .addClass('sr-only')
+        .text('Loading...')
+      let spinner = $('<div>')
+        .addClass('spinner-grow')
+        .attr('role', 'status')
+        .append(sr)
+      $('#message').append(spinner)
+    }
   }
 
   this.displayRestartMsg = function (msg) {
     $('#choice').hide()
-    let a = $('<a>')
+    let a = $('<button>')
       .attr('href', '#')
-      .addClass('restart-btn')
+      .addClass('btn btn-secondary restart-btn font-weight-bold')
       .text('Play again.')
     $('#message')
       .text(msg + ' ')
@@ -24,5 +36,5 @@ function Messages() {
     $('#message').hide()
     $('#choice').show()
   }
-  
+
 }

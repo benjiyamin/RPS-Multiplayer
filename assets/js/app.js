@@ -91,7 +91,7 @@ function Application(messages) {
         messages.displayChoiceMsg()
       } else {
         // User is added
-        messages.displayMsg('Looking for an opponent to play against..')
+        messages.displayMsg('Looking for an opponent to play against..', looking = true)
       }
     })
   })
