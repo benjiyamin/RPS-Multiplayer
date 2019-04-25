@@ -45,7 +45,7 @@
 .chat-card {
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 20px;
     width: 300px
 }
 
@@ -79,7 +79,7 @@
 }
 
 .chat-message {
-    padding-top: 10px;
+    padding: 10px 12px 0 0;
     margin: 0;
 }
 
